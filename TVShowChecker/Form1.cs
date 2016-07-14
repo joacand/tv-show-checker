@@ -81,12 +81,8 @@ namespace TVShowChecker {
         }
 
         private async Task fillTVList() {
-            // Fetch root information about every TV shows
-            string[] apiRequests = getApiURLs();
-            var showsJsonAsync = getAPIJsonAsync(apiRequests);
-            string[] showsJson = await showsJsonAsync;
-
-            List<string> showInfoJson = new List<string>(showsJson);
+            string[] apiRequests = getApiRequests();
+            List<string> showInfoJson = new List<string>(await getAPIJsonAsync(apiRequests));
 
             // Fetch information about the next and previous episodes
             TupleList<string, string> nextApiReqs = new TupleList<string, string>();
@@ -110,18 +106,16 @@ namespace TVShowChecker {
                 }
             }
 
-            var nextEpisodeJsonAsync = getEpisodeInfoJson(nextApiReqs);
-            var prevEpisodeJsonAsync = getEpisodeInfoJson(prevApiReqs);
-            string[] nextEpisodeJson = await nextEpisodeJsonAsync;
-            string[] prevEpisodeJson = await prevEpisodeJsonAsync;
-            
+            string[] nextEpisodeJson = await getEpisodeInfoJson(nextApiReqs);
+            string[] prevEpisodeJson = await getEpisodeInfoJson(prevApiReqs);
+
             List<RawTVShow> prevEpisodeInfo = genPrevEpisodeInfo(prevEpisodeJson, prevApiReqs);
             List<RawTVShow> nextEpisodeInfo = genNextEpisodeInfo(nextEpisodeJson, nextApiReqs);
 
             addInformationToTvShowList(prevEpisodeInfo, nextEpisodeInfo);
         }
 
-        private string[] getApiURLs() {
+        private string[] getApiRequests() {
             string[] apiRequests = new string[subscribedTVShows.Count];
             for (int i = 0; i < subscribedTVShows.Count; i++) {
                 apiRequests[i] = tvmazeAPIURL + subscribedTVShows[i];
@@ -134,8 +128,7 @@ namespace TVShowChecker {
             foreach (Tuple<string, string> t in apiReqs) {
                 apiReqsTemp.Add(t.Item2);
             }
-            var episodeInfoJsonAsync = getAPIJsonAsync(apiReqsTemp.ToArray());
-            string[] episodeInfoJson = await episodeInfoJsonAsync;
+            string[] episodeInfoJson = await getAPIJsonAsync(apiReqsTemp.ToArray());
             return episodeInfoJson;
         }
 
@@ -155,9 +148,7 @@ namespace TVShowChecker {
             List<string> nextEpisodeInfo = new List<string>();
             for (int i = 0; i < nextEpisodeJson.Length; i++) {
                 var fullObject = JsonConvert.DeserializeObject<dynamic>(nextEpisodeJson[i]);
-
                 string airDate = fullObject.airdate;
-
                 nextEpisodeInfo.Add(airDate);
             }
             return nextEpisodeInfo;
