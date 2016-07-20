@@ -18,6 +18,9 @@ namespace TVShowChecker {
         public Form1() {
             InitializeComponent();
 
+            dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView1.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
+
             readSubscribedTVShows();
             checkTV();
         }
@@ -59,7 +62,6 @@ namespace TVShowChecker {
 
 
         private void autoAdjustWidths() {
-            dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             for (int i = 1; i < dataGridView1.Columns.Count; i++) {
                 dataGridView1.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             }
