@@ -17,10 +17,6 @@ namespace TVShowChecker {
 
         public Form1() {
             InitializeComponent();
-
-            dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridView1.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
-
             readSubscribedTVShows();
             checkTV();
         }
