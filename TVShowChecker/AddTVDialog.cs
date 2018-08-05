@@ -2,34 +2,35 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace TVShowChecker {
-    public partial class AddTVDialog : Form {
+namespace TVShowChecker
+{
+    public partial class AddTVDialog : Form
+    {
+        public string StatusMsgCallback { get; private set; } = "";
 
-        private string statusMsgCallback = "";
-
-        public AddTVDialog() {
+        public AddTVDialog()
+        {
             InitializeComponent();
-            this.AcceptButton = button_add;
+            AcceptButton = AddTvShowButton;
         }
 
-        public DialogResult go(Point location) {
-            this.Location = new Point(location.X, location.Y - this.Height);
+        public DialogResult Go(Point location)
+        {
+            Location = new Point(location.X, location.Y - Height);
 
-            DialogResult dialogResult = this.ShowDialog();
+            DialogResult dialogResult = ShowDialog();
             return dialogResult;
         }
 
-        public string getStatusMsgCallback() {
-            return statusMsgCallback;
+        private void AddTvShowButton_Click(object sender, EventArgs e)
+        {
+            StatusMsgCallback = textBox_addTV.Text;
+            Close();
         }
 
-        private void button_add_Click(object sender, EventArgs e) {
-            statusMsgCallback = textBox_addTV.Text;
-            this.Close();
-        }
-
-        private void button_cancel_Click(object sender, EventArgs e) {
-            this.Close();
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

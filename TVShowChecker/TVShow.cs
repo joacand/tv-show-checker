@@ -1,40 +1,48 @@
 ﻿using System;
 
-namespace TVShowChecker {
-    class TVShow {
-        public string name { get; set; }
-        public string currEpisodeNumber { get; set; }
-        public string nextEpisode { get; set; }
-        public string latestEpisode { get; set; }
+namespace TVShowChecker
+{
+    class TVShow
+    {
+        public string Name { get; set; }
+        public string CurrEpisodeNumber { get; set; }
+        public string NextEpisode { get; set; }
+        public string LatestEpisode { get; set; }
 
-        public TVShow() {
+        public TVShow()
+        {
         }
 
-        public TVShow(string name, string episodenr, string nxt, string prv) {
-            this.name = name;
-            currEpisodeNumber = episodenr;
-            nextEpisode = nxt;
-            latestEpisode = prv;
+        public TVShow(string name, string episodeNumber, string nextEpisode, string previousEpisode)
+        {
+            Name = name;
+            CurrEpisodeNumber = episodeNumber;
+            NextEpisode = nextEpisode;
+            LatestEpisode = previousEpisode;
         }
 
-        public string getLatestEpisodeTime() {
+        public string GetLatestEpisodeTime()
+        {
             string latestEpisodeTime = "";
-            if (latestEpisode != "") {
-                TimeSpan timeLeftSpan = DateTime.Today.Subtract(DateTime.Parse(latestEpisode));
+            if (!string.IsNullOrWhiteSpace(LatestEpisode))
+            {
+                TimeSpan timeLeftSpan = DateTime.Today.Subtract(DateTime.Parse(LatestEpisode));
                 if (timeLeftSpan.Days == 1)
-                    latestEpisodeTime = timeLeftSpan.Days.ToString() + " day ago";
+                    latestEpisodeTime = $"{timeLeftSpan.Days} day ago";
                 else if (timeLeftSpan.Days == 0)
                     latestEpisodeTime = "Today";
                 else
-                    latestEpisodeTime = timeLeftSpan.Days.ToString() + " days ago";
+                    latestEpisodeTime = $"{timeLeftSpan.Days} days ago";
             }
             return latestEpisodeTime;
         }
 
-        public string getTimeLeftForNextEpisode() {
+        public string GetTimeLeftForNextEpisode()
+        {
             string timeLeft = "";
-            if (nextEpisode != "") {
-                TimeSpan timeLeftSpan = DateTime.Parse(nextEpisode).Subtract(DateTime.Today);
+            if (!string.IsNullOrWhiteSpace(NextEpisode))
+            {
+                TimeSpan timeLeftSpan = DateTime.Parse(NextEpisode).Subtract(DateTime.Today);
                 timeLeft = timeLeftSpan.Days + " day";
                 if (timeLeftSpan.Days != 1)
                     timeLeft += "s";

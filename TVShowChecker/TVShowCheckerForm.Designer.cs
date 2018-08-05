@@ -1,5 +1,5 @@
 ﻿namespace TVShowChecker {
-    partial class Form1 {
+    partial class TVShowCheckerForm {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -28,7 +28,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TVShowCheckerForm));
             this.button_addTV = new System.Windows.Forms.Button();
             this.button_rmvTvShow = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
