@@ -5,36 +5,32 @@ namespace TVShowChecker
     class TVShow
     {
         public string Name { get; set; }
-        public string CurrEpisodeNumber { get; set; }
+        public string CurrentEpisodeNumber { get; set; }
         public string NextEpisode { get; set; }
-        public string LatestEpisode { get; set; }
-
-        public TVShow()
-        {
-        }
-
+        public string PreviousEpisode { get; set; }
+        
         public TVShow(string name, string episodeNumber, string nextEpisode, string previousEpisode)
         {
             Name = name;
-            CurrEpisodeNumber = episodeNumber;
+            CurrentEpisodeNumber = episodeNumber;
             NextEpisode = nextEpisode;
-            LatestEpisode = previousEpisode;
+            PreviousEpisode = previousEpisode;
         }
 
-        public string GetLatestEpisodeTime()
+        public string GetPreviousEpisodeTime()
         {
-            string latestEpisodeTime = "";
-            if (!string.IsNullOrWhiteSpace(LatestEpisode))
+            string previousEpisodeTime = "";
+            if (!string.IsNullOrWhiteSpace(PreviousEpisode))
             {
-                TimeSpan timeLeftSpan = DateTime.Today.Subtract(DateTime.Parse(LatestEpisode));
+                TimeSpan timeLeftSpan = DateTime.Today.Subtract(DateTime.Parse(PreviousEpisode));
                 if (timeLeftSpan.Days == 1)
-                    latestEpisodeTime = $"{timeLeftSpan.Days} day ago";
+                    previousEpisodeTime = $"{timeLeftSpan.Days} day ago";
                 else if (timeLeftSpan.Days == 0)
-                    latestEpisodeTime = "Today";
+                    previousEpisodeTime = "Today";
                 else
-                    latestEpisodeTime = $"{timeLeftSpan.Days} days ago";
+                    previousEpisodeTime = $"{timeLeftSpan.Days} days ago";
             }
-            return latestEpisodeTime;
+            return previousEpisodeTime;
         }
 
         public string GetTimeLeftForNextEpisode()

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Xml.Serialization;
 
 namespace TVShowChecker
 {
@@ -14,38 +15,31 @@ namespace TVShowChecker
     {
         private List<String> subscribedTVShows = new List<string>();
         private List<TVShow> TVShows = new List<TVShow>();
-        private string subTVFile = @"SubscribedTV.txt";
+        private string subTVFile = @"SubscribedTV.xml";
         private string tvmazeAPIURL = @"http://api.tvmaze.com/search/shows?q=";
 
         public TVShowCheckerForm()
         {
             InitializeComponent();
-            readSubscribedTVShows();
-            checkTV();
+            ReadSubscribedTVShows();
+            CheckTV();
         }
 
-        private void readSubscribedTVShows()
+        private void ReadSubscribedTVShows()
         {
             if (File.Exists(subTVFile))
             {
-                using (StreamReader sr = new StreamReader(subTVFile))
+                using (var sr = new StreamReader(subTVFile))
                 {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        subscribedTVShows.Add(line);
-                    }
+                    var serializer = new XmlSerializer(typeof(List<string>));
+                    subscribedTVShows = serializer.Deserialize(sr) as List<string>;
                 }
-            }
-            else
-            {
-                using (var tmp = File.Create(subTVFile)) { };
             }
         }
 
-        private async void checkTV()
+        private async void CheckTV()
         {
-            await fillTVList();
+            await FillTVList();
 
             dataGridView1.DataSource = null;
             dataGridView1.Rows.Clear();
@@ -53,22 +47,20 @@ namespace TVShowChecker
 
             foreach (TVShow show in TVShows)
             {
-                dataGridView1.Rows.Add(show.Name, show.CurrEpisodeNumber,
-                    show.GetLatestEpisodeTime(), show.GetTimeLeftForNextEpisode());
+                dataGridView1.Rows.Add(show.Name, show.CurrentEpisodeNumber,
+                    show.GetPreviousEpisodeTime(), show.GetTimeLeftForNextEpisode());
             }
 
-            autoAdjustWidths();
-            fitFormToTable();
-            sortTableByLatestEpisode();
+            AutoAdjustWidths();
+            FitFormToTable();
+            SortTableByLatestEpisode();
 
-            if (TVShows.Count == 1)
-                setStatus("Info available for " + TVShows.Count + " TV show. Total: " + subscribedTVShows.Count + ".");
-            else
-                setStatus("Info available for " + TVShows.Count + " TV shows. Total: " + subscribedTVShows.Count + ".");
+            string pluralCharacter = TVShows.Count == 1 ? "" : "s";
+            SetStatus($"Info available for {TVShows.Count} TV show{pluralCharacter}. Total: {subscribedTVShows.Count}.");
         }
 
 
-        private void autoAdjustWidths()
+        private void AutoAdjustWidths()
         {
             for (int i = 1; i < dataGridView1.Columns.Count; i++)
             {
@@ -76,7 +68,7 @@ namespace TVShowChecker
             }
         }
 
-        private void fitFormToTable()
+        private void FitFormToTable()
         {
             if (dataGridView1.Rows.Count > 0)
             {
@@ -85,57 +77,53 @@ namespace TVShowChecker
                 {
                     height += dr.Height;
                 }
-                this.Height = height + 100;
+                Height = height + 100;
             }
         }
 
-        private void sortTableByLatestEpisode()
+        private void SortTableByLatestEpisode()
         {
-            dataGridView1.SortCompare += customSortCompare;
+            dataGridView1.SortCompare += CustomSortCompare;
             dataGridView1.Sort(dataGridView1.Columns[2], ListSortDirection.Ascending);
         }
 
-        private async Task fillTVList()
+        private async Task FillTVList()
         {
-            string[] apiRequests = getApiRequests();
-            List<string> showInfoJson = new List<string>(await getAPIJsonAsync(apiRequests));
+            string[] apiRequests = GetApiRequests();
+            var showInfoJson = new List<string>(await GetMultipleAPIJson(apiRequests));
 
-            // Fetch information about the next and previous episodes
-            TupleList<string, string> nextApiReqs = new TupleList<string, string>();
-            TupleList<string, string> prevApiReqs = new TupleList<string, string>();
-
+            var taskList = new List<Task<EpisodeInfo>>();
             for (int i = 0; i < subscribedTVShows.Count; i++)
             {
-                var fullObject = JsonConvert.DeserializeObject<dynamic>(showInfoJson[i]);
-                if (fullObject.First == null)
-                {
-                    continue;
-                }
-                string showName = fullObject.First.show.name;
-                var nextEp = fullObject.First.show._links.nextepisode;
-                var prevEp = fullObject.First.show._links.previousepisode;
-                if (nextEp != null)
-                {
-                    string nextEpHref = nextEp.href;
-                    nextApiReqs.Add(showName, nextEpHref);
-                }
-                if (prevEp != null)
-                {
-                    string prevEpHref = prevEp.href;
-                    prevApiReqs.Add(showName, prevEpHref);
-                }
+                taskList.Add(CreateEpisode(showInfoJson[i]));
             }
 
-            string[] nextEpisodeJson = await getEpisodeInfoJson(nextApiReqs);
-            string[] prevEpisodeJson = await getEpisodeInfoJson(prevApiReqs);
+            var episodes = await Task.WhenAll(taskList.ToArray());
+            var episodeInfos = new List<EpisodeInfo>(episodes);
 
-            List<RawTVShow> prevEpisodeInfo = genPrevEpisodeInfo(prevEpisodeJson, prevApiReqs);
-            List<RawTVShow> nextEpisodeInfo = genNextEpisodeInfo(nextEpisodeJson, nextApiReqs);
-
-            addInformationToTvShowList(prevEpisodeInfo, nextEpisodeInfo);
+            AddInformationToTvShowList(episodeInfos);
         }
 
-        private string[] getApiRequests()
+        private async Task<EpisodeInfo> CreateEpisode(string showInfoJson)
+        {
+            var fullObject = JsonConvert.DeserializeObject<dynamic>(showInfoJson);
+            if (fullObject.First == null)
+            {
+                return null;
+            }
+            string showName = fullObject.First.show.name;
+            string nextEpHref = fullObject.First.show._links?.nextepisode?.href;
+            string prevEpHref = fullObject.First.show._links?.previousepisode?.href;
+
+            var nextEp = await GetEpisodeInfoJson(nextEpHref);
+            var prevEp = await GetEpisodeInfoJson(prevEpHref);
+
+            var nextEpRaw = GenPrevEpisodeInfo(showName, nextEp);
+            var prevEpRaw = GenPrevEpisodeInfo(showName, prevEp);
+            return new EpisodeInfo(showName, nextEpRaw, prevEpRaw);
+        }
+
+        private string[] GetApiRequests()
         {
             string[] apiRequests = new string[subscribedTVShows.Count];
             for (int i = 0; i < subscribedTVShows.Count; i++)
@@ -145,212 +133,131 @@ namespace TVShowChecker
             return apiRequests;
         }
 
-        private async Task<string[]> getEpisodeInfoJson(TupleList<string, string> apiReqs)
+        private async Task<string> GetEpisodeInfoJson(string apiRequest)
         {
-            List<string> apiReqsTemp = new List<string>();
-            foreach (Tuple<string, string> t in apiReqs)
-            {
-                apiReqsTemp.Add(t.Item2);
-            }
-            string[] episodeInfoJson = await getAPIJsonAsync(apiReqsTemp.ToArray());
-            return episodeInfoJson;
+            return await GetAPIJson(apiRequest);
         }
 
-        private List<RawTVShow> genNextEpisodeInfo(string[] nextEpisodeJson, TupleList<string, string> nextApiReqs)
+        private RawTVShow GenPrevEpisodeInfo(string name, string prevEpisodeJson)
         {
-            List<string> nextEpisodeInfoTemp = parseNextEpisodeInformation(nextEpisodeJson);
-
-            List<RawTVShow> nextEpisodeInfo = new List<RawTVShow>();
-            for (int i = 0; i < nextApiReqs.Count; i++)
+            if (string.IsNullOrWhiteSpace(prevEpisodeJson))
             {
-                Tuple<string, string> nextApiReq = nextApiReqs[i];
-                nextEpisodeInfo.Add(new RawTVShow(nextApiReq.Item1, nextEpisodeInfoTemp[i]));
+                return null;
             }
 
-            return nextEpisodeInfo;
+            var fullObject = JsonConvert.DeserializeObject<dynamic>(prevEpisodeJson);
+
+            string airDate = fullObject.airdate;
+            string season = fullObject.season;
+            season = season.PadLeft(2, '0');
+            string number = fullObject.number;
+            number = number.PadLeft(2, '0');
+
+            return new RawTVShow(name, airDate, "S" + season + "E" + number);
         }
 
-        private List<string> parseNextEpisodeInformation(string[] nextEpisodeJson)
-        {
-            List<string> nextEpisodeInfo = new List<string>();
-            for (int i = 0; i < nextEpisodeJson.Length; i++)
-            {
-                var fullObject = JsonConvert.DeserializeObject<dynamic>(nextEpisodeJson[i]);
-                string airDate = fullObject.airdate;
-                nextEpisodeInfo.Add(airDate);
-            }
-            return nextEpisodeInfo;
-        }
-
-        private List<RawTVShow> genPrevEpisodeInfo(string[] prevEpisodeJson, TupleList<string, string> prevApiReqs)
-        {
-            List<Tuple<string, string>> prevEpisodeInfoTemp = parsePrevEpisodeInformation(prevEpisodeJson);
-
-            List<RawTVShow> prevEpisodeInfo = new List<RawTVShow>();
-            for (int i = 0; i < prevApiReqs.Count; i++)
-            {
-                Tuple<string, string> prevApiReq = prevApiReqs[i];
-                prevEpisodeInfo.Add(new RawTVShow(prevApiReq.Item1, prevEpisodeInfoTemp[i].Item1, prevEpisodeInfoTemp[i].Item2));
-            }
-
-            return prevEpisodeInfo;
-        }
-
-        private List<Tuple<string, string>> parsePrevEpisodeInformation(string[] prevEpisodeJson)
-        {
-            List<Tuple<string, string>> prevEpisodeInfo = new List<Tuple<string, string>>();
-            for (int i = 0; i < prevEpisodeJson.Length; i++)
-            {
-                var fullObject = JsonConvert.DeserializeObject<dynamic>(prevEpisodeJson[i]);
-
-                string airDate = fullObject.airdate;
-                string season = fullObject.season;
-                season = season.PadLeft(2, '0');
-                string number = fullObject.number;
-                number = number.PadLeft(2, '0');
-
-                prevEpisodeInfo.Add(new Tuple<string, string>(airDate, "S" + season + "E" + number));
-            }
-            return prevEpisodeInfo;
-        }
-
-        private void addInformationToTvShowList(List<RawTVShow> prevEpisodeInfo, List<RawTVShow> nextEpisodeInfo)
+        private void AddInformationToTvShowList(List<EpisodeInfo> episodesInfos)
         {
             TVShows.Clear();
-            foreach (RawTVShow rawTvShow in prevEpisodeInfo)
-            {
-                TVShow newTV = new TVShow();
-                newTV.Name = rawTvShow.name;
-                newTV.NextEpisode = "";
-                foreach (RawTVShow nextShow in nextEpisodeInfo)
-                {
-                    if (nextShow.name.Equals(newTV.Name))
-                    {
-                        newTV.NextEpisode = nextShow.airDate;
-                    }
-                }
-                newTV.CurrEpisodeNumber = rawTvShow.episode;
-                newTV.LatestEpisode = rawTvShow.airDate;
 
+            foreach (var episode in episodesInfos)
+            {
+                TVShow newTV = new TVShow(episode.EpisodeName, episode?.PrevEp?.Episode, episode?.NextEp?.AirDate, episode?.PrevEp?.AirDate);
                 TVShows.Add(newTV);
             }
         }
 
-        private async Task<string[]> getAPIJsonAsync(string[] apiRequests)
+        private async Task<string[]> GetMultipleAPIJson(string[] apiRequests)
         {
-            var client = new HttpClient();
             List<string> res = new List<string>();
             List<Task<string>> tasks = new List<Task<string>>();
 
             foreach (string req in apiRequests)
             {
-                tasks.Add(ProcessURLAsync(req, client));
+                tasks.Add(GetAPIJson(req));
             }
             foreach (Task<string> task in tasks)
             {
                 res.Add(await task);
             }
-
             return res.ToArray();
         }
 
-        private async Task<string> ProcessURLAsync(string url, HttpClient httpClient)
+        private async Task<string> GetAPIJson(string apiRequest)
         {
-            return await httpClient.GetStringAsync(url);
+            if (apiRequest == null)
+            {
+                return null;
+            }
+
+            using (var httpClient = new HttpClient())
+            {
+                return await httpClient.GetStringAsync(apiRequest);
+            }
         }
 
-        private void button_addTV_Click(object sender, EventArgs e)
+        private void AddTvButton_Click(object sender, EventArgs e)
         {
             string newTV;
             AddTVDialog dialog = new AddTVDialog();
-            dialog.Go(this.Location);
+            dialog.Go(Location);
             string result = dialog.StatusMsgCallback.Trim();
-            if (!result.Equals(""))
+            if (!string.IsNullOrWhiteSpace(result))
             {
                 newTV = dialog.StatusMsgCallback;
                 if (subscribedTVShows.Contains(newTV))
                 {
-                    setStatus(newTV + " already exists.");
+                    SetStatus(newTV + " already exists.");
                 }
                 else
                 {
                     subscribedTVShows.Add(newTV);
-                    saveTVShows();
-                    checkTV();
-                    setStatus("Added " + newTV + ".");
+                    SaveTVShows();
+                    CheckTV();
+                    SetStatus("Added " + newTV + ".");
                 }
             }
         }
 
-        private void saveTVShows()
+        private void SaveTVShows()
         {
             using (StreamWriter sw = new StreamWriter(subTVFile))
             {
-                foreach (string tvShow in subscribedTVShows)
-                {
-                    sw.WriteLine(tvShow);
-                }
+                var serializer = new XmlSerializer(subscribedTVShows.GetType());
+                serializer.Serialize(sw, subscribedTVShows);
+                sw.Flush();
             }
         }
 
-        private void button_rmvTvShow_Click(object sender, EventArgs e)
+        private void RmvTvButton_Click(object sender, EventArgs e)
         {
             int initialAmntElmts = subscribedTVShows.Count;
             RemoveTVDialog d = new RemoveTVDialog();
-            d.Go(this.Location, subscribedTVShows); // Passing a reference to the list
+            d.Go(Location, subscribedTVShows);
 
             int removedElements = initialAmntElmts - subscribedTVShows.Count;
             if (removedElements > 0)
             {
-                saveTVShows();
-                checkTV();
-                if (removedElements == 1)
-                    setStatus("Removed " + removedElements + " TV show.");
-                else
-                    setStatus("Removed " + removedElements + " TV shows.");
+                SaveTVShows();
+                CheckTV();
+
+                string pluralCharacter = removedElements == 1 ? "" : "s";
+                SetStatus($"Removed {removedElements} TV show{pluralCharacter}.");
             }
         }
 
-        private void button_refresh_Click(object sender, EventArgs e)
+        private void RefreshButton_Click(object sender, EventArgs e)
         {
-            checkTV();
-            setStatus("Refreshing.");
+            CheckTV();
+            SetStatus("Refreshing.");
         }
 
-        private void setStatus(string s)
+        private void SetStatus(string statusText)
         {
-            label_status.Text = s;
+            label_status.Text = statusText;
         }
 
-        private class TupleList<T1, T2> : List<Tuple<T1, T2>>
-        {
-            public void Add(T1 item, T2 item2)
-            {
-                Add(new Tuple<T1, T2>(item, item2));
-            }
-        }
-
-        private class RawTVShow
-        {
-            public string name { get; set; }
-            public string airDate { get; set; }
-            public string episode { get; set; }
-
-            public RawTVShow(string n, string a, string e)
-            {
-                name = n;
-                airDate = a;
-                episode = e;
-            }
-
-            public RawTVShow(string n, string a)
-            {
-                name = n;
-                airDate = a;
-            }
-        }
-
-        private void customSortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        private void CustomSortCompare(object sender, DataGridViewSortCompareEventArgs e)
         {
             string c1 = e.CellValue1.ToString().Split(' ')[0];
             string c2 = e.CellValue2.ToString().Split(' ')[0];
@@ -366,19 +273,19 @@ namespace TVShowChecker
                 e.Handled = true;
                 return;
             }
-            if (!isNum(c1) && !isNum(c2))
+            if (!c1.IsNumeric() && !c2.IsNumeric())
             {
                 e.SortResult = e.CellValue1.ToString().CompareTo(e.CellValue2.ToString());
                 e.Handled = true;
                 return;
             }
-            if (!isNum(c1))
+            if (!c1.IsNumeric())
             {
                 e.SortResult = -1;
                 e.Handled = true;
                 return;
             }
-            if (!isNum(c2))
+            if (!c2.IsNumeric())
             {
                 e.SortResult = 1;
                 e.Handled = true;
@@ -390,11 +297,6 @@ namespace TVShowChecker
             e.SortResult = a.CompareTo(b);
 
             e.Handled = true;
-        }
-
-        private bool isNum(string a)
-        {
-            return a.All(char.IsDigit) && !a.Equals("");
         }
     }
 }

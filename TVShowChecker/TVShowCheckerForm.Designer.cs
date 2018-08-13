@@ -29,40 +29,40 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TVShowCheckerForm));
-            this.button_addTV = new System.Windows.Forms.Button();
-            this.button_rmvTvShow = new System.Windows.Forms.Button();
+            this.AddTvButton = new System.Windows.Forms.Button();
+            this.RmvTvButton = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label_status = new System.Windows.Forms.Label();
-            this.button_refresh = new System.Windows.Forms.Button();
+            this.RefreshButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
-            // button_addTV
+            // AddTvButton
             // 
-            this.button_addTV.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_addTV.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button_addTV.Location = new System.Drawing.Point(425, 458);
-            this.button_addTV.Name = "button_addTV";
-            this.button_addTV.Size = new System.Drawing.Size(103, 23);
-            this.button_addTV.TabIndex = 1;
-            this.button_addTV.Text = "Add TV Show";
-            this.button_addTV.UseVisualStyleBackColor = true;
-            this.button_addTV.Click += new System.EventHandler(this.button_addTV_Click);
+            this.AddTvButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.AddTvButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.AddTvButton.Location = new System.Drawing.Point(425, 458);
+            this.AddTvButton.Name = "AddTvButton";
+            this.AddTvButton.Size = new System.Drawing.Size(103, 23);
+            this.AddTvButton.TabIndex = 1;
+            this.AddTvButton.Text = "Add TV Show";
+            this.AddTvButton.UseVisualStyleBackColor = true;
+            this.AddTvButton.Click += new System.EventHandler(this.AddTvButton_Click);
             // 
-            // button_rmvTvShow
+            // RmvTvButton
             // 
-            this.button_rmvTvShow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_rmvTvShow.Location = new System.Drawing.Point(615, 458);
-            this.button_rmvTvShow.Name = "button_rmvTvShow";
-            this.button_rmvTvShow.Size = new System.Drawing.Size(103, 23);
-            this.button_rmvTvShow.TabIndex = 3;
-            this.button_rmvTvShow.Text = "Remove TV Show";
-            this.button_rmvTvShow.UseVisualStyleBackColor = true;
-            this.button_rmvTvShow.Click += new System.EventHandler(this.button_rmvTvShow_Click);
+            this.RmvTvButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.RmvTvButton.Location = new System.Drawing.Point(615, 458);
+            this.RmvTvButton.Name = "RmvTvButton";
+            this.RmvTvButton.Size = new System.Drawing.Size(103, 23);
+            this.RmvTvButton.TabIndex = 3;
+            this.RmvTvButton.Text = "Remove TV Show";
+            this.RmvTvButton.UseVisualStyleBackColor = true;
+            this.RmvTvButton.Click += new System.EventHandler(this.RmvTvButton_Click);
             // 
             // dataGridView1
             // 
@@ -152,27 +152,27 @@
             this.label_status.Size = new System.Drawing.Size(0, 16);
             this.label_status.TabIndex = 4;
             // 
-            // button_refresh
+            // RefreshButton
             // 
-            this.button_refresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_refresh.Location = new System.Drawing.Point(534, 458);
-            this.button_refresh.Name = "button_refresh";
-            this.button_refresh.Size = new System.Drawing.Size(75, 23);
-            this.button_refresh.TabIndex = 2;
-            this.button_refresh.Text = "Refresh";
-            this.button_refresh.UseVisualStyleBackColor = true;
-            this.button_refresh.Click += new System.EventHandler(this.button_refresh_Click);
+            this.RefreshButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.RefreshButton.Location = new System.Drawing.Point(534, 458);
+            this.RefreshButton.Name = "RefreshButton";
+            this.RefreshButton.Size = new System.Drawing.Size(75, 23);
+            this.RefreshButton.TabIndex = 2;
+            this.RefreshButton.Text = "Refresh";
+            this.RefreshButton.UseVisualStyleBackColor = true;
+            this.RefreshButton.Click += new System.EventHandler(this.RefreshButton_Click);
             // 
             // TVShowCheckerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(730, 493);
-            this.Controls.Add(this.button_refresh);
+            this.Controls.Add(this.RefreshButton);
             this.Controls.Add(this.label_status);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.button_rmvTvShow);
-            this.Controls.Add(this.button_addTV);
+            this.Controls.Add(this.RmvTvButton);
+            this.Controls.Add(this.AddTvButton);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(470, 418);
             this.Name = "TVShowCheckerForm";
@@ -184,11 +184,11 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button button_addTV;
-        private System.Windows.Forms.Button button_rmvTvShow;
+        private System.Windows.Forms.Button AddTvButton;
+        private System.Windows.Forms.Button RmvTvButton;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label_status;
-        private System.Windows.Forms.Button button_refresh;
+        private System.Windows.Forms.Button RefreshButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
