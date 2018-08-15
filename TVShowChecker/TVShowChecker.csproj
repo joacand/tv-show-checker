@@ -51,10 +51,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddTVDialog.cs">
+    <Compile Include="UI\AddTVDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddTVDialog.Designer.cs">
+    <Compile Include="UI\AddTVDialog.Designer.cs">
       <DependentUpon>AddTVDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\ConfigHandler.cs" />
@@ -63,25 +63,25 @@
     <Compile Include="Entities\TVShowContext.cs" />
     <Compile Include="Entities\Episode.cs" />
     <Compile Include="Infrastructure\StringExtensions.cs" />
-    <Compile Include="TVShowCheckerForm.cs">
+    <Compile Include="UI\TVShowCheckerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TVShowCheckerForm.Designer.cs">
+    <Compile Include="UI\TVShowCheckerForm.Designer.cs">
       <DependentUpon>TVShowCheckerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RemoveTVDialog.cs">
+    <Compile Include="UI\RemoveTVDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="RemoveTVDialog.Designer.cs">
+    <Compile Include="UI\RemoveTVDialog.Designer.cs">
       <DependentUpon>RemoveTVDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Entities\TVShow.cs" />
-    <EmbeddedResource Include="AddTVDialog.resx">
+    <EmbeddedResource Include="UI\AddTVDialog.resx">
       <DependentUpon>AddTVDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TVShowCheckerForm.resx">
+    <EmbeddedResource Include="UI\TVShowCheckerForm.resx">
       <DependentUpon>TVShowCheckerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -93,7 +93,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="RemoveTVDialog.resx">
+    <EmbeddedResource Include="UI\RemoveTVDialog.resx">
       <DependentUpon>RemoveTVDialog.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
