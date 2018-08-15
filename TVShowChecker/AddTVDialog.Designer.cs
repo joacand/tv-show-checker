@@ -27,7 +27,7 @@
             this.textBox_addTV = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.AddTvShowButton = new System.Windows.Forms.Button();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.AddDialogCancelButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBox_addTV
@@ -59,23 +59,23 @@
             this.AddTvShowButton.UseVisualStyleBackColor = true;
             this.AddTvShowButton.Click += new System.EventHandler(this.AddTvShowButton_Click);
             // 
-            // CancelButton
+            // AddDialogCancelButton
             // 
-            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelButton.Location = new System.Drawing.Point(210, 32);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 4;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this.AddDialogCancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.AddDialogCancelButton.Location = new System.Drawing.Point(210, 32);
+            this.AddDialogCancelButton.Name = "AddDialogCancelButton";
+            this.AddDialogCancelButton.Size = new System.Drawing.Size(75, 23);
+            this.AddDialogCancelButton.TabIndex = 4;
+            this.AddDialogCancelButton.Text = "Cancel";
+            this.AddDialogCancelButton.UseVisualStyleBackColor = true;
+            this.AddDialogCancelButton.Click += new System.EventHandler(this.AddDialogCancelButton_Click);
             // 
             // AddTVDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(377, 64);
-            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.AddDialogCancelButton);
             this.Controls.Add(this.AddTvShowButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox_addTV);
@@ -96,6 +96,6 @@
         private System.Windows.Forms.TextBox textBox_addTV;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button AddTvShowButton;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button AddDialogCancelButton;
     }
 }

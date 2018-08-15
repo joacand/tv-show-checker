@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TVShowChecker
+namespace TVShowChecker.Entities
 {
     class TVShow
     {

@@ -26,7 +26,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RemoveTVDialog));
             this.RemoveButton = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.DialogCancelButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // RemoveButton
@@ -56,23 +56,23 @@
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Tile;
             // 
-            // CancelButton
+            // DialogCancelButton
             // 
-            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelButton.Location = new System.Drawing.Point(185, 403);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 1;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this.DialogCancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.DialogCancelButton.Location = new System.Drawing.Point(185, 403);
+            this.DialogCancelButton.Name = "DialogCancelButton";
+            this.DialogCancelButton.Size = new System.Drawing.Size(75, 23);
+            this.DialogCancelButton.TabIndex = 1;
+            this.DialogCancelButton.Text = "Cancel";
+            this.DialogCancelButton.UseVisualStyleBackColor = true;
+            this.DialogCancelButton.Click += new System.EventHandler(this.DialogCancelButton_Click);
             // 
             // RemoveTVDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(365, 438);
-            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.DialogCancelButton);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.RemoveButton);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -88,6 +88,6 @@
 
         private System.Windows.Forms.Button RemoveButton;
         private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button DialogCancelButton;
     }
 }

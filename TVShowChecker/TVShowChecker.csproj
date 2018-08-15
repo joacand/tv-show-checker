@@ -57,9 +57,12 @@
     <Compile Include="AddTVDialog.Designer.cs">
       <DependentUpon>AddTVDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="EpisodeInfo.cs" />
-    <Compile Include="RawTVShow.cs" />
-    <Compile Include="StringExtensions.cs" />
+    <Compile Include="Infrastructure\ConfigHandler.cs" />
+    <Compile Include="Infrastructure\ITVShowService.cs" />
+    <Compile Include="Infrastructure\TVMazeService.cs" />
+    <Compile Include="Entities\TVShowContext.cs" />
+    <Compile Include="Entities\Episode.cs" />
+    <Compile Include="Infrastructure\StringExtensions.cs" />
     <Compile Include="TVShowCheckerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,7 +77,7 @@
     <Compile Include="RemoveTVDialog.Designer.cs">
       <DependentUpon>RemoveTVDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="TVShow.cs" />
+    <Compile Include="Entities\TVShow.cs" />
     <EmbeddedResource Include="AddTVDialog.resx">
       <DependentUpon>AddTVDialog.cs</DependentUpon>
     </EmbeddedResource>

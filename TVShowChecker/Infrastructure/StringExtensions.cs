@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace TVShowChecker
+namespace TVShowChecker.Infrastructure
 {
     static class StringExtensions
     {

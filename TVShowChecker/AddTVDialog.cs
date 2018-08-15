@@ -28,7 +28,7 @@ namespace TVShowChecker
             Close();
         }
 
-        private void CancelButton_Click(object sender, EventArgs e)
+        private void AddDialogCancelButton_Click(object sender, EventArgs e)
         {
             Close();
         }
