@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using TVShowChecker.Entities;
+using TVShowChecker.Core.Interfaces;
+using TVShowChecker.Core.Models;
 
-namespace TVShowChecker.Infrastructure
+namespace TVShowChecker.Infrastructure.Services
 {
-    class TVMazeService : ITVShowService
+    public class TVMazeService : ITVShowService
     {
         private static readonly string TVMAZE_API_URL = @"http://api.tvmaze.com/search/shows?q=";
 
         public async Task<IEnumerable<TVShow>> GetTvShows(List<string> subscribedTVShows)
         {
-            string[] apiRequests = GetApiRequests(subscribedTVShows);
+            var apiRequests = GetApiRequests(subscribedTVShows);
             var showInfoJson = new List<string>(await GetMultipleAPIJson(apiRequests));
 
             var taskList = new List<Task<TVShowContext>>();
@@ -31,7 +32,7 @@ namespace TVShowChecker.Infrastructure
 
         private string[] GetApiRequests(List<string> subscribedTVShows)
         {
-            string[] apiRequests = new string[subscribedTVShows.Count];
+            var apiRequests = new string[subscribedTVShows.Count];
             for (int i = 0; i < subscribedTVShows.Count; i++)
             {
                 apiRequests[i] = TVMAZE_API_URL + subscribedTVShows[i];
@@ -41,8 +42,8 @@ namespace TVShowChecker.Infrastructure
 
         private async Task<string[]> GetMultipleAPIJson(string[] apiRequests)
         {
-            List<string> res = new List<string>();
-            List<Task<string>> tasks = new List<Task<string>>();
+            var res = new List<string>();
+            var tasks = new List<Task<string>>();
 
             foreach (string req in apiRequests)
             {
@@ -75,6 +76,7 @@ namespace TVShowChecker.Infrastructure
             {
                 return null;
             }
+
             string showName = fullObject.First.show.name;
             string nextEpHref = fullObject.First.show._links?.nextepisode?.href;
             string prevEpHref = fullObject.First.show._links?.previousepisode?.href;
@@ -82,8 +84,8 @@ namespace TVShowChecker.Infrastructure
             var nextEp = await GetEpisodeInfoJson(nextEpHref);
             var prevEp = await GetEpisodeInfoJson(prevEpHref);
 
-            var nextEpRaw = GenEpisodeInfo(showName, nextEp);
-            var prevEpRaw = GenEpisodeInfo(showName, prevEp);
+            Episode nextEpRaw = GenEpisodeInfo(showName, nextEp);
+            Episode prevEpRaw = GenEpisodeInfo(showName, prevEp);
             return new TVShowContext(showName, nextEpRaw, prevEpRaw);
         }
 

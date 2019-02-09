@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using TVShowChecker.Entities;
+using TVShowChecker.Core.Models;
 
-namespace TVShowChecker.Infrastructure
+namespace TVShowChecker.Core.Interfaces
 {
-    interface ITVShowService
+    public interface ITVShowService
     {
         Task<IEnumerable<TVShow>> GetTvShows(List<string> subscribedTvShows);
     }

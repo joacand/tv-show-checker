@@ -6,7 +6,7 @@ namespace TVShowChecker
 {
     public partial class AddTVDialog : Form
     {
-        public string StatusMsgCallback { get; private set; } = "";
+        public string StatusMsgCallback { get; private set; }
 
         public AddTVDialog()
         {
@@ -18,7 +18,7 @@ namespace TVShowChecker
         {
             Location = new Point(location.X, location.Y - Height);
 
-            DialogResult dialogResult = ShowDialog();
+            var dialogResult = ShowDialog();
             return dialogResult;
         }
 

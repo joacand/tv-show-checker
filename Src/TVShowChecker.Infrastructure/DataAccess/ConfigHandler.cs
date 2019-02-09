@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using TVShowChecker.Core.Interfaces;
 
-namespace TVShowChecker.Infrastructure
+namespace TVShowChecker.Infrastructure.DataAccess
 {
-    class ConfigHandler
+    public class ConfigHandler : IConfigHandler
     {
         private static readonly string subTvConfigFile = @"SubscribedTV.xml";
 

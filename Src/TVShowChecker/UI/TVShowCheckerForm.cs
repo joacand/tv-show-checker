@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
-using TVShowChecker.Entities;
-using TVShowChecker.Infrastructure;
+using TVShowChecker.Core.Extensions;
+using TVShowChecker.Core.Interfaces;
+using TVShowChecker.Core.Models;
 
 namespace TVShowChecker
 {
     public partial class TVShowCheckerForm : Form
     {
-        private readonly List<String> subscribedTVShows;
+        private readonly List<string> subscribedTVShows;
         private readonly ITVShowService tvShowService;
-        private readonly ConfigHandler configHandler = new ConfigHandler();
+        private readonly IConfigHandler configHandler;
 
-        public TVShowCheckerForm()
+        public TVShowCheckerForm(IConfigHandler configHandler, ITVShowService tvShowService)
         {
+            this.tvShowService = tvShowService;
+            this.configHandler = configHandler;
+
             InitializeComponent();
-            tvShowService = new TVMazeService();
             subscribedTVShows = configHandler.ReadSubscribedTvShowsFromConfig();
             RefreshTvList();
         }
@@ -31,15 +34,18 @@ namespace TVShowChecker
 
             foreach (TVShow show in tvShows)
             {
-                dataGridView1.Rows.Add(show.Name, show.CurrentEpisodeNumber,
-                    show.GetPreviousEpisodeTime(), show.GetTimeLeftForNextEpisode());
+                dataGridView1.Rows.Add(
+                    show.Name,
+                    show.CurrentEpisodeNumber,
+                    show.GetPreviousEpisodeTime(),
+                    show.GetTimeLeftForNextEpisode());
             }
 
             AutoAdjustWidths();
             FitFormToTable();
             SortTableByLatestEpisode();
 
-            string pluralCharacter = tvShows.Count == 1 ? "" : "s";
+            var pluralCharacter = tvShows.Count == 1 ? "" : "s";
             SetStatus($"Info available for {tvShows.Count} TV show{pluralCharacter}. Total: {subscribedTVShows.Count}.");
         }
 
@@ -57,9 +63,9 @@ namespace TVShowChecker
             if (dataGridView1.Rows.Count > 0)
             {
                 var height = dataGridView1.Rows[0].Height - 1;
-                foreach (DataGridViewRow dr in dataGridView1.Rows)
+                foreach (DataGridViewRow dataGridRow in dataGridView1.Rows)
                 {
-                    height += dr.Height;
+                    height += dataGridRow.Height;
                 }
                 Height = height + 100;
             }
@@ -74,11 +80,12 @@ namespace TVShowChecker
         private void AddTvButton_Click(object sender, EventArgs e)
         {
             string newTV;
-            AddTVDialog dialog = new AddTVDialog();
+            var dialog = new AddTVDialog();
             dialog.Go(Location);
-            string result = dialog.StatusMsgCallback.Trim();
+            var result = dialog?.StatusMsgCallback;
             if (!string.IsNullOrWhiteSpace(result))
             {
+                result = result.Trim();
                 newTV = dialog.StatusMsgCallback;
                 if (subscribedTVShows.Contains(newTV))
                 {
@@ -96,17 +103,17 @@ namespace TVShowChecker
 
         private void RmvTvButton_Click(object sender, EventArgs e)
         {
-            int initialAmntElmts = subscribedTVShows.Count;
-            RemoveTVDialog removeTvDialog = new RemoveTVDialog();
+            var initialAmntElmts = subscribedTVShows.Count;
+            var removeTvDialog = new RemoveTVDialog();
             removeTvDialog.Go(Location, subscribedTVShows);
 
-            int removedElements = initialAmntElmts - subscribedTVShows.Count;
+            var removedElements = initialAmntElmts - subscribedTVShows.Count;
             if (removedElements > 0)
             {
                 SaveTVShows();
                 RefreshTvList();
 
-                string pluralCharacter = removedElements == 1 ? "" : "s";
+                var pluralCharacter = removedElements == 1 ? "" : "s";
                 SetStatus($"Removed {removedElements} TV show{pluralCharacter}.");
             }
         }

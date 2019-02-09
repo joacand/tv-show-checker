@@ -1,6 +1,6 @@
-﻿namespace TVShowChecker.Entities
+﻿namespace TVShowChecker.Core.Models
 {
-    class Episode
+    public sealed class Episode
     {
         public string Name { get; }
         public string AirDate { get; }

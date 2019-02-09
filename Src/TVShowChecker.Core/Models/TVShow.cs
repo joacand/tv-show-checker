@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace TVShowChecker.Entities
+namespace TVShowChecker.Core.Models
 {
-    class TVShow
+    public sealed class TVShow
     {
         public string Name { get; set; }
         public string CurrentEpisodeNumber { get; set; }
         public string NextEpisode { get; set; }
         public string PreviousEpisode { get; set; }
-        
+
         public TVShow(string name, string episodeNumber, string nextEpisode, string previousEpisode)
         {
             Name = name;
@@ -19,10 +19,10 @@ namespace TVShowChecker.Entities
 
         public string GetPreviousEpisodeTime()
         {
-            string previousEpisodeTime = "";
+            var previousEpisodeTime = "";
             if (!string.IsNullOrWhiteSpace(PreviousEpisode))
             {
-                TimeSpan timeLeftSpan = DateTime.Today.Subtract(DateTime.Parse(PreviousEpisode));
+                var timeLeftSpan = DateTime.Today.Subtract(DateTime.Parse(PreviousEpisode));
                 if (timeLeftSpan.Days == 1)
                     previousEpisodeTime = $"{timeLeftSpan.Days} day ago";
                 else if (timeLeftSpan.Days == 0)
@@ -35,10 +35,10 @@ namespace TVShowChecker.Entities
 
         public string GetTimeLeftForNextEpisode()
         {
-            string timeLeft = "";
+            var timeLeft = "";
             if (!string.IsNullOrWhiteSpace(NextEpisode))
             {
-                TimeSpan timeLeftSpan = DateTime.Parse(NextEpisode).Subtract(DateTime.Today);
+                var timeLeftSpan = DateTime.Parse(NextEpisode).Subtract(DateTime.Today);
                 timeLeft = timeLeftSpan.Days + " day";
                 if (timeLeftSpan.Days != 1)
                     timeLeft += "s";

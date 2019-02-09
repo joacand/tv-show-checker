@@ -35,11 +35,14 @@
     <ApplicationIcon>tvshowchecker24.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,20 +52,21 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Unity.Abstractions, Version=4.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Unity.5.9.3\lib\net45\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.9.3.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Unity.5.9.3\lib\net45\Unity.Container.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bootstrapper.cs" />
     <Compile Include="UI\AddTVDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\AddTVDialog.Designer.cs">
       <DependentUpon>AddTVDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\ConfigHandler.cs" />
-    <Compile Include="Infrastructure\ITVShowService.cs" />
-    <Compile Include="Infrastructure\TVMazeService.cs" />
-    <Compile Include="Entities\TVShowContext.cs" />
-    <Compile Include="Entities\Episode.cs" />
-    <Compile Include="Infrastructure\StringExtensions.cs" />
     <Compile Include="UI\TVShowCheckerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,7 +81,6 @@
     <Compile Include="UI\RemoveTVDialog.Designer.cs">
       <DependentUpon>RemoveTVDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entities\TVShow.cs" />
     <EmbeddedResource Include="UI\AddTVDialog.resx">
       <DependentUpon>AddTVDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -112,6 +115,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="tvshowchecker24.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TVShowChecker.Core\TVShowChecker.Core.csproj">
+      <Project>{b7519533-93d2-440e-9bdf-6b8ac87b2659}</Project>
+      <Name>TVShowChecker.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TVShowChecker.Infrastructure\TVShowChecker.Infrastructure.csproj">
+      <Project>{e20ccc25-41a6-4b72-8bd5-4ac6c477bc5a}</Project>
+      <Name>TVShowChecker.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

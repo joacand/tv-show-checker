@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 
-namespace TVShowChecker.Infrastructure
+namespace TVShowChecker.Core.Extensions
 {
-    static class StringExtensions
+    public static class StringExtensions
     {
         public static bool IsNumeric(this string a)
         {

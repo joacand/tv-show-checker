@@ -1,6 +1,6 @@
-﻿namespace TVShowChecker.Entities
+﻿namespace TVShowChecker.Core.Models
 {
-    class TVShowContext
+    public sealed class TVShowContext
     {
         public string TvShowName { get; }
         public Episode NextEp { get; }

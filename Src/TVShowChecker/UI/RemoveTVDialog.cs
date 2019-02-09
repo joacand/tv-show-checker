@@ -7,7 +7,7 @@ namespace TVShowChecker
 {
     public partial class RemoveTVDialog : Form
     {
-        private List<String> subbedTVShows;
+        private List<string> subbedTVShows;
 
         public RemoveTVDialog()
         {
@@ -25,13 +25,13 @@ namespace TVShowChecker
                 listView1.Items.Add(new ListViewItem(show));
             }
 
-            DialogResult dialogResult = ShowDialog();
+            var dialogResult = ShowDialog();
             return dialogResult;
         }
 
         private void RemoveButton_Click(object sender, EventArgs e)
         {
-            ListView.SelectedListViewItemCollection selected = listView1.SelectedItems;
+            var selected = listView1.SelectedItems;
 
             foreach (ListViewItem item in selected)
             {
