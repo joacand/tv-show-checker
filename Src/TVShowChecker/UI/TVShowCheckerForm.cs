@@ -85,7 +85,6 @@ namespace TVShowChecker
             var result = dialog?.StatusMsgCallback;
             if (!string.IsNullOrWhiteSpace(result))
             {
-                result = result.Trim();
                 newTV = dialog.StatusMsgCallback;
                 if (subscribedTVShows.Contains(newTV))
                 {

@@ -56,19 +56,6 @@ namespace TVShowChecker.Infrastructure.Services
             return res.ToArray();
         }
 
-        private async Task<string> GetAPIJson(string apiRequest)
-        {
-            if (apiRequest == null)
-            {
-                return null;
-            }
-
-            using (var httpClient = new HttpClient())
-            {
-                return await httpClient.GetStringAsync(apiRequest);
-            }
-        }
-
         private async Task<TVShowContext> CreateEpisode(string showInfoJson)
         {
             var fullObject = JsonConvert.DeserializeObject<dynamic>(showInfoJson);
@@ -110,6 +97,17 @@ namespace TVShowChecker.Infrastructure.Services
             number = number.PadLeft(2, '0');
 
             return new Episode(name, airDate, $"S{season}E{number}");
+        }
+
+        private async Task<string> GetAPIJson(string apiRequest)
+        {
+            if (string.IsNullOrWhiteSpace(apiRequest))
+            {
+                return null;
+            }
+
+            using var httpClient = new HttpClient();
+            return await httpClient.GetStringAsync(apiRequest);
         }
     }
 }
