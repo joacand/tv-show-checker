@@ -14,11 +14,13 @@ namespace TVShowChecker
         private readonly List<string> subscribedTVShows;
         private readonly ITVShowService tvShowService;
         private readonly IConfigHandler configHandler;
+        private readonly ILogger logger;
 
-        public TVShowCheckerForm(IConfigHandler configHandler, ITVShowService tvShowService)
+        public TVShowCheckerForm(IConfigHandler configHandler, ITVShowService tvShowService, ILogger logger)
         {
             this.tvShowService = tvShowService;
             this.configHandler = configHandler;
+            this.logger = logger;
 
             InitializeComponent();
             subscribedTVShows = configHandler.ReadSubscribedTvShowsFromConfig();
@@ -27,7 +29,17 @@ namespace TVShowChecker
 
         private async void RefreshTvList()
         {
-            var tvShows = (await tvShowService.GetTvShows(subscribedTVShows)).Distinct().ToList();
+            List<TVShow> tvShows;
+            try
+            {
+                tvShows = (await tvShowService.GetTvShows(subscribedTVShows)).Distinct().ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error when fetching TV shows from API: {ex}");
+                SetStatus($"Error when fetching TV shows. See log file in application directory for details.");
+                return;
+            }
 
             dataGridView1.DataSource = null;
             dataGridView1.Rows.Clear();

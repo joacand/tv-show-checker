@@ -11,6 +11,7 @@ namespace TVShowChecker
         {
             container.RegisterType<IConfigHandler, ConfigHandler>();
             container.RegisterType<ITVShowService, TVMazeService>();
+            container.RegisterType<ILogger, Logger>();
         }
     }
 }
