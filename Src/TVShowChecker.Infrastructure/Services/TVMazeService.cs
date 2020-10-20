@@ -92,9 +92,9 @@ namespace TVShowChecker.Infrastructure.Services
 
             string airDate = fullObject.airdate;
             string season = fullObject.season;
-            season = season.PadLeft(2, '0');
+            season = season?.PadLeft(2, '0');
             string number = fullObject.number;
-            number = number.PadLeft(2, '0');
+            number = number?.PadLeft(2, '0');
 
             return new Episode(name, airDate, $"S{season}E{number}");
         }
