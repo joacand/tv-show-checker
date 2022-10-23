@@ -6,6 +6,6 @@ namespace TVShowChecker.Core.Interfaces
 {
     public interface ITVShowService
     {
-        Task<IEnumerable<TVShow>> GetTvShows(List<string> subscribedTvShows);
+        Task<IEnumerable<TVShow>> GetTvShows(IEnumerable<string> subscribedTvShows);
     }
 }
