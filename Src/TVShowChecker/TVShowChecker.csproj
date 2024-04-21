@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <Version>4.1.0</Version>
@@ -15,25 +14,20 @@
     <ApplicationIcon>tvshowchecker24.ico</ApplicationIcon>
     <RootNamespace>TVShowChecker</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="App.config" />
     <None Remove="tvshowchecker24.ico" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="tvshowchecker24.ico" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Unity" Version="5.11.10" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\TVShowChecker.Core\TVShowChecker.Core.csproj" />
     <ProjectReference Include="..\TVShowChecker.Infrastructure\TVShowChecker.Infrastructure.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Update="UI\AddTVDialog.cs">
       <SubType>Form</SubType>
@@ -54,7 +48,6 @@
       <DependentUpon>TVShowCheckerForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Update="UI\AddTVDialog.resx">
       <DependentUpon>AddTVDialog.cs</DependentUpon>
@@ -66,5 +59,4 @@
       <DependentUpon>TVShowCheckerForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-
 </Project>
