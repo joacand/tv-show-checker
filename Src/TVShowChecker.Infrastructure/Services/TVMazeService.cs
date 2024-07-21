@@ -1,17 +1,15 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using TVShowChecker.Core.Interfaces;
 using TVShowChecker.Core.Models;
 
 namespace TVShowChecker.Infrastructure.Services
 {
-    public class TVMazeService : ITVShowService
+    public sealed partial class TVMazeService : ITVShowService
     {
-        private static readonly string TVMAZE_API_URL = @"http://api.tvmaze.com/search/shows?q=";
-        private static readonly HttpClient httpClient = new HttpClient();
+        private const string TVMAZE_API_URL = @"http://api.tvmaze.com/search/shows?q=";
 
         public async Task<IEnumerable<TVShow>> GetTvShows(IEnumerable<string> subscribedTVShows)
         {
@@ -21,39 +19,33 @@ namespace TVShowChecker.Infrastructure.Services
             var taskList = showInfoJson.Select(x => CreateEpisode(x));
             var episodes = (await Task.WhenAll(taskList.ToArray())).Where(x => x != null);
 
-            var tvShows = episodes.Select(episode => new TVShow(episode.TvShowName, episode?.PrevEp?.EpisodeNumber, episode?.NextEp?.AirDate, episode?.PrevEp?.AirDate));
-            return tvShows;
+            return episodes.Select(episode => new TVShow(episode.TvShowName, episode?.PrevEp?.EpisodeNumber, episode?.NextEp?.AirDate, episode?.PrevEp?.AirDate));
         }
 
-        private IEnumerable<string> GetApiRequests(IEnumerable<string> subscribedTVShows) =>
+        private static IEnumerable<string> GetApiRequests(IEnumerable<string> subscribedTVShows) =>
             subscribedTVShows.Select(x => $"{TVMAZE_API_URL}{x}");
 
-        private async Task<IEnumerable<string>> GetMultipleAPIJson(IEnumerable<string> apiRequests) =>
-            await Task.WhenAll(apiRequests.Select(x => GetAPIJson(x)));
+        private static async Task<IEnumerable<string>> GetMultipleAPIJson(IEnumerable<string> apiRequests) =>
+            await Task.WhenAll(apiRequests.Select(ApiClient.Get));
 
-        private async Task<TVShowContext> CreateEpisode(string showInfoJson)
+        private static async Task<TVShowContext> CreateEpisode(string showInfoJson)
         {
             var fullObject = JsonConvert.DeserializeObject<List<ShowResponse>>(showInfoJson);
-            if (!fullObject.Any())
-            {
-                return null;
-            }
+            if (fullObject.Count == 0) { return null; }
 
             var showName = fullObject.First().Show.Name;
-            var nextEpHref = fullObject.First().Show._Links?.NextEpisode?.Href;
-            var prevEpHref = fullObject.First().Show._Links?.PreviousEpisode?.Href;
+            var nextEpHrefUri = fullObject.First().Show._Links?.NextEpisode?.Href;
+            var prevEpHrefUri = fullObject.First().Show._Links?.PreviousEpisode?.Href;
 
-            var nextEp = await GetEpisodeInfoJson(nextEpHref);
-            var prevEp = await GetEpisodeInfoJson(prevEpHref);
+            var nextEp = await ApiClient.Get(nextEpHrefUri);
+            var prevEp = await ApiClient.Get(prevEpHrefUri);
 
             var nextEpRaw = GenEpisodeInfo(showName, nextEp);
             var prevEpRaw = GenEpisodeInfo(showName, prevEp);
             return new TVShowContext(showName, nextEpRaw, prevEpRaw);
         }
 
-        private async Task<string> GetEpisodeInfoJson(string apiRequest) => await GetAPIJson(apiRequest);
-
-        private Episode GenEpisodeInfo(string name, string prevEpisodeJson)
+        private static Episode GenEpisodeInfo(string name, string prevEpisodeJson)
         {
             if (string.IsNullOrWhiteSpace(prevEpisodeJson))
             {
@@ -69,59 +61,6 @@ namespace TVShowChecker.Infrastructure.Services
             number = number?.PadLeft(2, '0');
 
             return new Episode(name, airDate, $"S{season}E{number}");
-        }
-
-        private async Task<string> GetAPIJson(string apiRequest)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(apiRequest))
-                {
-                    return null;
-                }
-
-                var response = await httpClient.GetAsync(apiRequest);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    return null;
-                }
-
-                return await response.Content.ReadAsStringAsync();
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private class ShowResponse
-        {
-            public Show Show { get; set; }
-        }
-
-        private class Show
-        {
-            public string Name { get; set; }
-            public ShowLinks _Links { get; set; }
-        }
-
-        private class ShowLinks
-        {
-            public EpisodeHref NextEpisode { get; set; }
-            public EpisodeHref PreviousEpisode { get; set; }
-        }
-
-        private class EpisodeHref
-        {
-            public string Href { get; set; }
-        }
-
-        private class EpisodeResponse
-        {
-            public string Airdate { get; set; }
-            public string Season { get; set; }
-            public string Number { get; set; }
         }
     }
 }

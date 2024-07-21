@@ -10,7 +10,7 @@
     <PackageId>TVShowChecker</PackageId>
     <Description>Application that checks the next and previous air dates of user selected TV shows</Description>
     <Company>Joacand</Company>
-    <Copyright>Copyright © 2019</Copyright>
+    <Copyright>Copyright © 2024</Copyright>
     <ApplicationIcon>tvshowchecker24.ico</ApplicationIcon>
     <RootNamespace>TVShowChecker</RootNamespace>
   </PropertyGroup>

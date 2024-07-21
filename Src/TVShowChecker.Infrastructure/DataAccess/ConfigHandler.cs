@@ -13,23 +13,19 @@ namespace TVShowChecker.Infrastructure.DataAccess
         {
             if (File.Exists(subTvConfigFile))
             {
-                using (var sr = new StreamReader(subTvConfigFile))
-                {
-                    var serializer = new XmlSerializer(typeof(List<string>));
-                    return serializer.Deserialize(sr) as List<string>;
-                }
+                using var sr = new StreamReader(subTvConfigFile);
+                var serializer = new XmlSerializer(typeof(List<string>));
+                return serializer.Deserialize(sr) as List<string>;
             }
-            return new List<string>();
+            return [];
         }
 
         public void SaveTvShowsToConfig(List<string> tvShows)
         {
-            using (StreamWriter sw = new StreamWriter(subTvConfigFile))
-            {
-                var serializer = new XmlSerializer(tvShows.GetType());
-                serializer.Serialize(sw, tvShows);
-                sw.Flush();
-            }
+            using StreamWriter sw = new(subTvConfigFile);
+            var serializer = new XmlSerializer(tvShows.GetType());
+            serializer.Serialize(sw, tvShows);
+            sw.Flush();
         }
     }
 }

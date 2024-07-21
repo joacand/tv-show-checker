@@ -1,4 +1,5 @@
 ﻿using TVShowChecker.Core.Interfaces;
+using TVShowChecker.Infrastructure;
 using TVShowChecker.Infrastructure.DataAccess;
 using TVShowChecker.Infrastructure.Services;
 using Unity;

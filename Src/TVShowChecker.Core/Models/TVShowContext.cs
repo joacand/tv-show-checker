@@ -1,16 +1,9 @@
 ﻿namespace TVShowChecker.Core.Models
 {
-    public sealed class TVShowContext
+    public sealed class TVShowContext(string tvShowName, Episode nextEp, Episode prevEp)
     {
-        public string TvShowName { get; }
-        public Episode NextEp { get; }
-        public Episode PrevEp { get; }
-
-        public TVShowContext(string tvShowName, Episode nextEp, Episode prevEp)
-        {
-            TvShowName = tvShowName;
-            NextEp = nextEp;
-            PrevEp = prevEp;
-        }
+        public string TvShowName { get; } = tvShowName;
+        public Episode NextEp { get; } = nextEp;
+        public Episode PrevEp { get; } = prevEp;
     }
 }

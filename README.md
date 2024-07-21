@@ -1,11 +1,9 @@
 # TV Show Checker
 
-A C# application that checks the next and previous air dates of user inputted TV shows. 
+TV Show Checker is a C# application that allows users to find out the next and previous air dates of their favorite TV shows. It utilizes the [TVmaze API](https://www.tvmaze.com/api) to retrieve TV show information.
 
-Uses TVmaze's API for the information.
+## Example
 
+Here is an example of how the application looks for a few TV shows:
 
-## Screenshot
-
-Here is an example of how it looks like for a few TV shows.
-![alt tag](http://i.imgur.com/rPQmw2d.png "Example usage of the application")
+![alt tag](https://i.imgur.com/6QblrKJ.png "Example usage of the application")

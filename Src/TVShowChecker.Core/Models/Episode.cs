@@ -1,16 +1,9 @@
 ﻿namespace TVShowChecker.Core.Models
 {
-    public sealed class Episode
+    public sealed class Episode(string name, string airDate, string episodeNumber = null)
     {
-        public string Name { get; }
-        public string AirDate { get; }
-        public string EpisodeNumber { get; }
-
-        public Episode(string name, string airDate, string episodeNumber = null)
-        {
-            Name = name;
-            AirDate = airDate;
-            EpisodeNumber = episodeNumber;
-        }
+        public string Name { get; } = name;
+        public string AirDate { get; } = airDate;
+        public string EpisodeNumber { get; } = episodeNumber;
     }
 }
