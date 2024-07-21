@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace TVShowChecker.Core.Interfaces
+namespace TVShowChecker.Core.Interfaces;
+
+public interface IConfigHandler
 {
-    public interface IConfigHandler
-    {
-        List<string> ReadSubscribedTvShowsFromConfig();
-        void SaveTvShowsToConfig(List<string> tvShows);
-    }
+    List<string> ReadSubscribedTvShowsFromConfig();
+    void SaveTvShowsToConfig(List<string> tvShows);
 }

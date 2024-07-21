@@ -2,29 +2,28 @@
 using System.IO;
 using TVShowChecker.Core.Interfaces;
 
-namespace TVShowChecker.Infrastructure
+namespace TVShowChecker.Infrastructure;
+
+public class Logger : ILogger
 {
-    public class Logger : ILogger
+    private static string TodaysLogFile => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DateTime.Now.ToShortDateString() + ".log");
+
+    public void LogError(string msg)
     {
-        private static string TodaysLogFile => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DateTime.Now.ToShortDateString() + ".log");
+        var logFile = GetLogFile();
+        using StreamWriter sw = File.AppendText(logFile);
+        sw.WriteLine($"{DateTime.Now} - ERROR: {msg}");
+    }
 
-        public void LogError(string msg)
+    private static string GetLogFile()
+    {
+        var logFile = TodaysLogFile;
+
+        if (!File.Exists(logFile))
         {
-            var logFile = GetLogFile();
-            using StreamWriter sw = File.AppendText(logFile);
-            sw.WriteLine($"{DateTime.Now} - ERROR: {msg}");
+            using (File.Create(logFile)) { };
         }
 
-        private static string GetLogFile()
-        {
-            var logFile = TodaysLogFile;
-
-            if (!File.Exists(logFile))
-            {
-                using (File.Create(logFile)) { };
-            }
-
-            return logFile;
-        }
+        return logFile;
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace TVShowChecker.Core.Interfaces
+﻿namespace TVShowChecker.Core.Interfaces;
+
+public interface ILogger
 {
-    public interface ILogger
-    {
-        void LogError(string msg);
-    }
+    void LogError(string msg);
 }

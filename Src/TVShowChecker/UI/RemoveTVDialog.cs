@@ -3,47 +3,46 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace TVShowChecker
+namespace TVShowChecker;
+
+public partial class RemoveTVDialog : Form
 {
-    public partial class RemoveTVDialog : Form
+    private List<string> subbedTVShows;
+
+    public RemoveTVDialog()
     {
-        private List<string> subbedTVShows;
+        InitializeComponent();
+        AcceptButton = RemoveButton;
+    }
 
-        public RemoveTVDialog()
+    public DialogResult Go(Point location, List<String> subbedTVShows)
+    {
+        Location = new Point(location.X, location.Y - Height);
+        this.subbedTVShows = subbedTVShows;
+
+        foreach (string show in subbedTVShows)
         {
-            InitializeComponent();
-            AcceptButton = RemoveButton;
+            listView1.Items.Add(new ListViewItem(show));
         }
 
-        public DialogResult Go(Point location, List<String> subbedTVShows)
+        var dialogResult = ShowDialog();
+        return dialogResult;
+    }
+
+    private void RemoveButton_Click(object sender, EventArgs e)
+    {
+        var selected = listView1.SelectedItems;
+
+        foreach (ListViewItem item in selected)
         {
-            Location = new Point(location.X, location.Y - Height);
-            this.subbedTVShows = subbedTVShows;
-
-            foreach (string show in subbedTVShows)
-            {
-                listView1.Items.Add(new ListViewItem(show));
-            }
-
-            var dialogResult = ShowDialog();
-            return dialogResult;
+            subbedTVShows.Remove(item.Text);
         }
 
-        private void RemoveButton_Click(object sender, EventArgs e)
-        {
-            var selected = listView1.SelectedItems;
+        Close();
+    }
 
-            foreach (ListViewItem item in selected)
-            {
-                subbedTVShows.Remove(item.Text);
-            }
-
-            Close();
-        }
-
-        private void DialogCancelButton_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
+    private void DialogCancelButton_Click(object sender, EventArgs e)
+    {
+        Close();
     }
 }
